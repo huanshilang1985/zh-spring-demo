@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+    default-autowire="byName">
+
+    <!-- SpringXml方式注解 -->
+    <bean id="indexDao" class="com.zh.dao.IndexDaoImpl"/>
+    <bean id="indexService" class="com.zh.service.IndexService">
+    <!-- 构造方法注入 -->
+    <constructor-arg name="indexDao" ref="indexDao" />
+    <!--<constructor-arg name="aa" value="42"/>-->
+
+    <!-- 使用setter方法注入，注入的是对象，用ref -->
+    <property name="indexDao" ref="indexDao"/>
+
+    <!-- 使用setter方法注入，注入属性值，用value -->
+    <property name="aa" value="wahahaha"/>
+    </bean>
+
+
+    <!-- 开启注解扫描路径，Annotation方式 -->
+    <context:component-scan base-package="com.zh" />
+
+</beans>
