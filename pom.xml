@@ -20,9 +20,12 @@
         <module>zh-spring-ioc</module>
         <module>zh-spring-aop</module>
         <module>zh-spring-anno</module>
+        <module>zh-spring-proxy</module>
+        <module>zh-spring-spring</module>
     </modules>
 
     <dependencies>
+        <!-- Spring核心包，包含：spring-core，spring-beans、spring-aop、spring-expression-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

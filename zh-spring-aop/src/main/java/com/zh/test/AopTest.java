@@ -27,7 +27,7 @@ public class AopTest {
     }
 
     /**
-     * 动态代理测试方法
+     * 动态代理测试方法，把源代码写到文件里
      */
     public static void a(){
         Class<?>[] interfaces = new Class[]{IndexDao.class};

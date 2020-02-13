@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  *  ElementTYpe.METHOD 可以放在方法上
  *
  * @Retention()  元注解，声明此注解的声明周期
- * PetentionPolicy.SOURCE 默认值，表示注解只在原理里，编译成class文件后消失
+ * RetentionPolicy.SOURCE 默认值，表示注解只在源码里，编译成class文件后消失
  * RetentionPolicy.CLASS 表示只会存在编译后的class文件里，但在运行时会被java虚拟机忽略
  * RetentionPolicy.RUNTIME  运行时有效
  *

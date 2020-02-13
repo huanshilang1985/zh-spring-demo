@@ -9,11 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>zh-spring-ioc</artifactId>
-
-    <dependencies>
-
-    </dependencies>
-
+    <artifactId>zh-spring-proxy</artifactId>
+    <name>zh-spring-proxy</name>
+    <description>Spring的代理模式</description>
 
 </project>
