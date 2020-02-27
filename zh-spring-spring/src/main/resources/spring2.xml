@@ -10,8 +10,8 @@
 
 -->
 <beans default="byType">
-    <bean id="dao" class="com.zh.dao.UserDaoImpl"/>
-    <bean id="dao1" class="com.zh.dao.UserDaoImpl1"/>
+    <bean id="dao" class="com.zh.dao.UserDao1Impl"/>
+    <bean id="dao1" class="com.zh.dao.UserDao2Impl"/>
 
     <!-- 注入：构造方法注入，set方法注入 -->
     <bean id="service" class="com.zh.service.UserService2Impl">

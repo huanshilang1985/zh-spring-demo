@@ -12,6 +12,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * 模拟自动装配
+ *
  * @author he.zhang
  * @date 2020/2/25 16:25
  */
@@ -80,6 +82,7 @@ public class BeanFactory2 {
                             int count = 0;
                             Object injectObject = null;
                             for(String key : map.keySet()){
+                                // map.get(key).getClass()取的是实现类，我们需要取它的接口来比较
                                 Class temp = map.get(key).getClass().getInterfaces()[0];
                                 if(temp.getName().equals(injectObjectClazz.getName())){
                                     injectObject = map.get(key);
@@ -90,8 +93,11 @@ public class BeanFactory2 {
                             if(count > 1){
                                 throw new MySpringException("需要一个对象，但是找到2个对象");
                             } else {
+                                // 把service当前类new一个新对象
                                 object = clazz.newInstance();
+                                // 开启访问权限
                                 field.setAccessible(true);
+                                // 把dao属性注入给service
                                 field.set(object, injectObject);
                             }
                         }

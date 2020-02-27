@@ -11,8 +11,8 @@
 -->
 <beans default="byType">
     <!-- 这两个配置文件都实现了UserDao接口，因为类型是byType，同时声明2个会报错 -->
-    <bean id="dao" class="com.zh.dao.UserDaoImpl"/>
-    <bean id="dao1" class="com.zh.dao.UserDaoImpl1"/>
+    <bean id="dao" class="com.zh.dao.UserDao1Impl"/>
+    <bean id="dao1" class="com.zh.dao.UserDao2Impl"/>
 
     <bean id="service" class="com.zh.service.UserService3Impl" />
 

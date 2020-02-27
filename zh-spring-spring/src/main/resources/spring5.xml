@@ -10,12 +10,12 @@
 -->
 <beans default="byType">
     <bean id="dao" class="com.zh.dao.UserDao1Impl"/>
-    <bean id="dao1" class="com.zh.dao.UserDao2Impl"/>
+    <bean id="dao2" class="com.zh.dao.UserDao2Impl"/>
 
     <!-- 注入：构造方法注入，set方法注入 -->
     <bean id="service" class="com.zh.service.UserService1Impl">
         <!-- setter方法 -->
-        <property name="dao" ref="dao" />
+        <property name="dao" ref="dao2" />
     </bean>
 
 
