@@ -20,8 +20,7 @@ public class CommUtil {
             entityName = entity.value();
             System.out.println(entityName);
         }
-        String sql = "select * from " + entityName;
-        return sql;
+        return "select * from " + entityName;
     }
 
 }

@@ -1,13 +1,11 @@
 package com.zh.test;
 
-import com.zh.app.AppConfig;
+import com.zh.conf.AppConfig;
 import com.zh.dao.IndexDao;
-import com.zh.dao.IndexDaoImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sun.misc.ProxyGenerator;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class AopTest {

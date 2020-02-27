@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>zh-spring-anno</artifactId>
-    <description>自定义注解</description>
+    <artifactId>zh-spring-factorybean</artifactId>
+    <description>FactoryBean和BeanFactory</description>
 
 
 </project>
