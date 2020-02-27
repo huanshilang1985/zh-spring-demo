@@ -13,102 +13,113 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * 自定义的BeanFactory，读取XML文件实现类加载
+ * 模拟手动装配
+ *
+ * @author he.zhang
+ * @date 2020/2/25 16:25
  */
 public class BeanFactory {
 
+    // 用来保存spring.xml的bean关系
     Map<String, Object> map = new HashMap<>();
 
-    public BeanFactory(String xml) throws MySpringException {
-        File file = new File(this.getClass().getResource("/").getPath() + "//" + xml);
-        SAXReader reader = new SAXReader();
-        try {
-            Document document = reader.read(file);
-            Element elementRoot = document.getRootElement();
-            Attribute attribute = elementRoot.attribute("default");
-            boolean flag = false;
-            if (attribute != null) {
-                flag = true;
-            }
+    /**
+     * 构造方法，提供配置信息
+     */
+    public BeanFactory(String xml) {
+        parseXml(xml);
+    }
 
-            for (Iterator<Element> itFirst = elementRoot.elementIterator(); itFirst.hasNext(); ) {
-                // setup1、实例化对象
-                Element elementFirstChild = itFirst.next();
-                Attribute attributeId = elementFirstChild.attribute("id");
+
+    /**
+     * 解析XML
+     *
+     * @param xml 描述信息
+     */
+    public void parseXml(String xml) {
+        // this.getClass().getResource("/")是得到class目录
+        try {
+            File file = new File(this.getClass().getResource("/").getPath() + "//" + xml);
+
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(file);
+            Element rootElement = document.getRootElement();
+
+            Object object = null;
+            // 使用迭代器会更安全，forEach可能会报错
+            for (Iterator<Element> itFirst = rootElement.elementIterator(); itFirst.hasNext(); ) {
+                /**
+                 * setup 1
+                 * 实例化对象，取1级子标签
+                 */
+                Element elementFirstCli = itFirst.next();
+                // 取XML里的id属性
+                Attribute attributeId = elementFirstCli.attribute("id");
                 String beanName = attributeId.getValue();
-                Attribute attributeClass = elementFirstChild.attribute("class");
+                // 取spring.xml里的class的属性
+                Attribute attributeClass = elementFirstCli.attribute("class");
                 String clazzName = attributeClass.getValue();
                 Class<?> clazz = Class.forName(clazzName);
+                /**
+                 * setup 2 维护依赖关系
+                 * 看这个对象有没有依赖，
+                 * 取2级子标签
+                 */
 
-                Object object = null;
-                for (Iterator<Element> itSecond = elementFirstChild.elementIterator(); itSecond.hasNext(); ) {
-                    // 得到ref的value，通过value得到对象（map）
-                    // 得到name的值，然后根据值获取一个Field的对象
-                    // 通过field的set方法，set那个对象
-                    // <property name="dao" ref="dao"></property>
-                    Element elementSecondChild = itSecond.next();
-                    if (elementSecondChild.getName().equals("property")) {
-                        // 由于是setter，没有特殊的构造方法
+                for (Iterator<Element> itSecond = elementFirstCli.elementIterator(); itSecond.hasNext(); ) {
+                    Element elementSecondChi = itSecond.next();
+
+                    /**
+                     * <property name="dao" ref="dao" />
+                     * 得到ref的value，通过value得到对象(map)
+                     * 得到name的值，根据值获取一个Field的对象，通过Field确认set那个方法
+                     */
+                    if ("property".equals(elementSecondChi.getName())) {
+                        // 由于是setter，没有特殊的构造方法，可以直接newInstance;
                         object = clazz.newInstance();
-                        String refValue = elementSecondChild.attribute("ref").getValue();
+                        String refValue = elementSecondChi.attribute("ref").getValue();
                         Object injectObject = map.get(refValue);
-                        String nameValue = elementSecondChild.attribute("name").getValue();
+                        String nameValue = elementSecondChi.attribute("name").getValue();
+                        // 拿到属性方法，这里会自动对应set方法
                         Field field = clazz.getDeclaredField(nameValue);
+                        // 开启访问权限
                         field.setAccessible(true);
+                        // object当前对象，insertObject要set的值
                         field.set(object, injectObject);
-                    } else {
-                        String refValue = elementSecondChild.attribute("ref").getValue();
+                    } else if ("constructor-arg".equals(elementSecondChi.getName())) {
+                        // 证明有特殊构造方法。这个方法只支持单个参数的构造方法，多个参数的还需要另写
+                        String refValue = elementSecondChi.attribute("ref").getValue();
                         Object injectObject = map.get(refValue);
-                        Class injectObjectClazz = injectObject.getClass();
-                        Constructor constructor = clazz.getConstructor(injectObjectClazz.getInterfaces()[0]);
+                        // 得到类的类型
+                        Class<?> injectObjectClazz = injectObject.getClass();
+                        //　得到构造方法，在spring.xml中配置的是实现类，但构造方法的属性dao是接口类
+                        Constructor<?> constructor = clazz.getConstructor(injectObjectClazz.getInterfaces()[0]);
                         object = constructor.newInstance(injectObject);
                     }
                 }
-
-                if (object == null) {
-                    if (flag) {
-                        if (attribute.getValue().equals("byType")) {
-                            // 判断是否有依赖
-                            Field fields[] = clazz.getDeclaredFields();
-                            for (Field field : fields) {
-                                // 得到属性的类型，比如String aa那么这里的field.getType()=String.class
-                                Class injectObjectClazz = field.getType();
-                                // 由于是byType，所以需要遍历map当中的所有对象,判断对象的类型是不是和这个injectObjectClazz相同。
-                                int count = 0;
-                                Object injectObject = null;
-                                for (String key : map.keySet()) {
-                                    Class temp = map.get(key).getClass().getInterfaces()[0];
-                                    if (temp.getName().equals(injectObjectClazz.getName())) {
-                                        injectObject = map.get(key);
-                                        // 记录找到一个，因为可能找到可能count
-                                        count++;
-                                    }
-                                }
-                                if (count > 1) {
-                                    throw new MySpringException("需要一个对象，但是找到两个对象");
-                                } else {
-                                    object = clazz.newInstance();
-                                    field.setAccessible(true);
-                                    field.set(object, injectObject);
-                                }
-                            }
-                        }
-                    }
-                }
-                // 没有子标签
-                if (object == null) {
+                // spring.xml没有子标签，表示没有依赖关系
+                if(object == null){
                     object = clazz.newInstance();
                 }
                 map.put(beanName, object);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println(map);
     }
 
+    /**
+     * BeanFactory的主要方法，或者对象信息
+     *
+     * @param beanName bean的名称
+     * @return Object
+     */
     public Object getBean(String beanName) {
         return map.get(beanName);
     }
+
 
 }

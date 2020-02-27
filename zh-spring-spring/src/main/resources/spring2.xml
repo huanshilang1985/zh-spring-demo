@@ -6,17 +6,17 @@
     3. 怎么维护依赖关系（setter，constructor）
     4. 怎么体现setter或者constructor
 
-    手动装配文件，测试set方法注入
+    手动装配文件，构造方法注入
+
 -->
 <beans default="byType">
     <bean id="dao" class="com.zh.dao.UserDaoImpl"/>
     <bean id="dao1" class="com.zh.dao.UserDaoImpl1"/>
 
     <!-- 注入：构造方法注入，set方法注入 -->
-    <bean id="service" class="com.zh.service.UserService1Impl">
-        <!-- setter方法 -->
-        <property name="dao" ref="dao" />
+    <bean id="service" class="com.zh.service.UserService2Impl">
+        <!--name的dao表示构造方法的属性名，ref的dao是上面声明的bean-->
+        <constructor-arg name="dao" ref="dao" />
     </bean>
-
 
 </beans>

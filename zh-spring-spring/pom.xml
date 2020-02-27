@@ -10,13 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>zh-spring-spring</artifactId>
+    <description>模拟Spring XML做自动装配</description>
 
     <dependencies>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
-        </dependency>
+
     </dependencies>
 
 </project>
