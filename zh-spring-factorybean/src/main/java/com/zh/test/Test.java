@@ -13,7 +13,7 @@ public class Test {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-        TempDaoFactoryBean daoFactoryBean = (TempDaoFactoryBean) context.getBean("daoFactoryBean");
-        daoFactoryBean.test();
+        TempDaoFactoryBean temp = (TempDaoFactoryBean) context.getBean("daoFactoryBean");
+        temp.test();
     }
 }
