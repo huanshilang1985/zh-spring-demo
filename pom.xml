@@ -23,6 +23,8 @@
         <module>zh-spring-proxy</module>
         <module>zh-spring-spring</module>
         <module>zh-spring-factorybean</module>
+        <module>zh-spring-importmapper</module>
+        <module>zh-spring-log</module>
 
     </modules>
 
